@@ -1310,6 +1310,49 @@
             transition: var(--transition);
             white-space: nowrap;
         }
+        .newsletter-channel {
+            margin-top: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .btn-whatsapp-channel {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 26px;
+            border-radius: 999px;
+            border: none;
+            background: #25D366;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(37,211,102,0.4);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-whatsapp-channel i {
+            font-size: 18px;
+        }
+
+        .btn-whatsapp-channel:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(37,211,102,0.5);
+        }
+        .newsletter-or {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
 
         .newsletter-form button:hover {
             transform: scale(1.05);
@@ -2075,6 +2118,38 @@
                 justify-content: center;
             }
 
+            .hero-channel {
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .hero-channel-text {
+                font-size: 14px;
+                color: rgba(255,255,255,0.75);
+                max-width: 320px;
+            }
+
+            .hero-channel .btn-whatsapp-channel {
+                padding: 10px 22px;
+                font-size: 14px;
+                box-shadow: 0 8px 22px rgba(37,211,102,0.45);
+            }
+
+            @media (max-width: 768px) {
+                .hero-channel {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .hero-channel .btn-whatsapp-channel {
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+
+
             .hero-visual {
                 display: none;
             }
@@ -2304,35 +2379,50 @@
         <div class="hero-floating"></div>
         <div class="hero-content">
             <div class="hero-text">
-                <h1>Descubre Productos <span class="gradient-text">Increíbles</span> Para Ti</h1>
-                <p>Miles de productos seleccionados especialmente para ti. Calidad premium, precios justos y envío a todo el Perú.</p>
-                
-                <div class="hero-badges">
-                    <div class="hero-badge">
-                        <i class="fas fa-truck"></i>
-                        <span>Envío Express</span>
-                    </div>
-                    <div class="hero-badge">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Compra Segura</span>
-                    </div>
-                    <div class="hero-badge">
-                        <i class="fas fa-headset"></i>
-                        <span>Soporte 24/7</span>
-                    </div>
+            <h1>Descubre Productos <span class="gradient-text">Increíbles</span> Para Ti</h1>
+            <p>Miles de productos seleccionados especialmente para ti. Calidad premium, precios justos y envío a todo el Perú.</p>
+            
+            <div class="hero-badges">
+                <div class="hero-badge">
+                    <i class="fas fa-truck"></i>
+                    <span>Envío Express</span>
                 </div>
-
-                <div class="hero-cta">
-                    <a href="#productos" class="btn btn-primary">
-                        <i class="fas fa-shopping-bag"></i>
-                        Ver Catálogo
-                    </a>
-                    <a href="#ofertas" class="btn btn-outline">
-                        <i class="fas fa-fire"></i>
-                        Ofertas del Día
-                    </a>
+                <div class="hero-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Compra Segura</span>
+                </div>
+                <div class="hero-badge">
+                    <i class="fas fa-headset"></i>
+                    <span>Soporte 24/7</span>
                 </div>
             </div>
+
+            <div class="hero-cta">
+                <a href="#productos" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i>
+                    Ver Catálogo
+                </a>
+                <a href="#ofertas" class="btn btn-outline">
+                    <i class="fas fa-fire"></i>
+                    Ofertas del Día
+                </a>
+            </div>
+
+            <!-- BOTÓN CANAL WHATSAPP EN EL HERO -->
+            <div class="hero-channel">
+                <span class="hero-channel-text">
+                    Síguenos en nuestro canal de WhatsApp y recibe <strong>ofertas flash y lanzamientos</strong> antes que nadie:
+                </span>
+                <a class="btn-whatsapp-channel"
+                href="https://whatsapp.com/channel/0029Vb76ZKXISTkF8ODoaI45"
+                target="_blank"
+                rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp"></i>
+                    Seguir canal NovaMercado Ofertas 🇵🇪
+                </a>
+            </div>
+        </div>
+
 
             <div class="hero-visual">
                 <div class="hero-cards" id="heroCards">
@@ -2539,15 +2629,26 @@
 
     <!-- NEWSLETTER -->
     <section class="newsletter">
-        <div class="newsletter-content">
-            <h2>¿Quieres Ofertas Exclusivas?</h2>
-            <p>Únete a nuestra comunidad y recibe descuentos especiales, novedades y promociones antes que nadie.</p>
-            <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
-                <input type="email" placeholder="Tu correo electrónico" required>
-                <button type="submit"><i class="fas fa-paper-plane"></i> Suscribirme</button>
-            </form>
+    <div class="newsletter-content">
+        <h2>¿Quieres Ofertas Exclusivas?</h2>
+        <p>Únete a nuestra comunidad y recibe descuentos especiales, novedades y promociones antes que nadie.</p>
+
+        <div class="newsletter-channel">
+            <span>
+                Recibe ofertas flash, lanzamientos y novedades en nuestro canal oficial de WhatsApp:
+            </span>
+            <a class="btn-whatsapp-channel"
+               href="https://whatsapp.com/channel/0029Vb76ZKXISTkF8ODoaI45"
+               target="_blank"
+               rel="noopener noreferrer">
+                <i class="fab fa-whatsapp"></i>
+                Seguir canal NovaMercado Ofertas 🇵🇪
+            </a>
         </div>
-    </section>
+    </div>
+</section>
+
+
 
     <!-- FOOTER -->
     <footer>
