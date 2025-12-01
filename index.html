@@ -959,6 +959,32 @@
             transform: scale(1.1);
             box-shadow: var(--shadow-glow);
         }
+        .product-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-buy-now-card {
+            padding: 10px 16px;
+            background: var(--primary);
+            border-radius: 12px;
+            border: none;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .btn-buy-now-card:hover {
+            background: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        
 
         /* LOAD MORE */
         .load-more-container {
@@ -2852,14 +2878,20 @@
                             <span class="product-reviews">${rating} (${reviews})</span>
                         </div>
                         <div class="product-footer">
-                            <div class="product-price">
-                                <span class="price-current">S/ ${salePrice.toFixed(2)}</span>
-                                <span class="price-original">S/ ${originalPrice}</span>
-                            </div>
+                        <div class="product-price">
+                            <span class="price-current">S/ ${salePrice.toFixed(2)}</span>
+                            <span class="price-original">S/ ${originalPrice}</span>
+                        </div>
+                        <div class="product-actions">
                             <button class="btn-add-cart" onclick="addToCart(${product.indice})">
                                 <i class="fas fa-plus"></i>
                             </button>
+                            <button class="btn-buy-now-card" onclick="buyNow(${product.indice})">
+                                Comprar
+                            </button>
                         </div>
+                    </div>
+
                     </div>
                 `;
                 grid.appendChild(card);
@@ -3001,14 +3033,20 @@
                             <span class="product-reviews">${rating} (${reviews})</span>
                         </div>
                         <div class="product-footer">
-                            <div class="product-price">
-                                <span class="price-current">S/ ${salePrice.toFixed(2)}</span>
-                                <span class="price-original">S/ ${originalPrice}</span>
-                            </div>
-                            <button class="btn-add-cart" onclick="addToCart(${product.indice})">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
+    <div class="product-price">
+        <span class="price-current">S/ ${salePrice.toFixed(2)}</span>
+        <span class="price-original">S/ ${originalPrice}</span>
+    </div>
+    <div class="product-actions">
+        <button class="btn-add-cart" onclick="addToCart(${product.indice})">
+            <i class="fas fa-plus"></i>
+        </button>
+        <button class="btn-buy-now-card" onclick="buyNow(${product.indice})">
+            Comprar
+        </button>
+    </div>
+</div>
+
                     </div>
                 `;
                 grid.appendChild(card);
