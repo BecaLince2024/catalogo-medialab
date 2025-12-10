@@ -4903,12 +4903,94 @@
         function toggleCart() { document.getElementById('cartOverlay').classList.toggle('active'); document.getElementById('cartSidebar').classList.toggle('active'); document.body.style.overflow = document.getElementById('cartSidebar').classList.contains('active') ? 'hidden' : ''; }
         function checkout() {
             if (!cart.length) return;
-            let msg = '🛒 *NUEVO PEDIDO - NOVA STORE*\n\n━━━━━━━━━━━━━━━━━━━━━━\n';
-            cart.forEach((i, idx) => { msg += `\n*${idx + 1}. ${i.name}*\n${i.variant ? `   Variante: ${i.variant}\n` : ''}   Cantidad: ${i.quantity}\n   Precio: S/ ${(i.price * i.quantity).toFixed(2)}\n`; });
-            const t = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-            msg += '\n━━━━━━━━━━━━━━━━━━━━━━\n';
-            msg += `\n💰 *TOTAL: S/ ${t.toFixed(2)}*\n\n📍 Por favor, envía tus datos:\n• Nombre completo\n• Dirección\n• Distrito y ciudad\n• Teléfono`;
-            window.open(`https://wa.me/51988629803?text=${encodeURIComponent(msg)}`, '_blank');
+
+            // 1. Calcular el total base
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            let total = subtotal;
+            let extraNotes = ""; 
+            let securityToken = ""; 
+
+            // --- LÓGICA A: REGALO POR MONTO ---
+            if (subtotal >= 150) {
+                // \uD83C\uDF81 es el código seguro para el emoji de REGALO 🎁
+                extraNotes += `\n\uD83C\uDF81 *FELICIDADES* Tu pedido incluye un REGALO SORPRESA (Compra > S/150)`;
+            }
+
+            // --- LÓGICA B: PREMIO DE RULETA ---
+            const savedPrize = localStorage.getItem('novaWheelPrize');
+            
+            if (savedPrize) {
+                const prize = JSON.parse(savedPrize);
+                const now = new Date().getTime();
+
+                // Validar que no haya expirado (7 días)
+                if (now < prize.expiresAt) {
+                    
+                    // Generamos el token de seguridad
+                    const wonDate = new Date(prize.wonAt);
+                    const dateStr = `${wonDate.getDate()}/${wonDate.getMonth()+1}`;
+                    // \uD83C\uDFAB es el código seguro para el emoji de TICKET 🎟️
+                    securityToken = `\uD83C\uDFAB *TOKEN VALIDEZ:* W${getWeekNumber(wonDate)}-${dateStr}`;
+
+                    if (prize.type === 'fixed') {
+                        total = subtotal - prize.value;
+                        if (total < 0) total = 0;
+                        // \uD83C\uDFF7 es ETIQUETA 🏷️
+                        extraNotes += `\n\uD83C\uDFF7 *CUPON APLICADO (${prize.code}):* - S/ ${prize.value.toFixed(2)}`;
+                    } else if (prize.type === 'shipping') {
+                        // \uD83D\uDE9A es CAMIÓN 🚚
+                        extraNotes += `\n\uD83D\uDE9A *CUPON (${prize.code}):* Envio Gratis Activado`;
+                    } else if (prize.type === 'gift') {
+                        // \uD83C\uDF81 es REGALO 🎁
+                        extraNotes += `\n\uD83C\uDF81 *PREMIO RULETA:* Ganaste un Regalo Sorpresa Adicional`;
+                    }
+                }
+            }
+
+            // --- 3. CONSTRUCCIÓN DEL MENSAJE (CON CÓDIGOS SEGUROS) ---
+            // \uD83D\uDED2 es CARRITO 🛒
+            let msg = '\uD83D\uDED2 *NUEVO PEDIDO - NOVA MERCADO*\n\n--------------------------------\n';
+            
+            cart.forEach((i, idx) => { 
+                msg += `\n*${idx + 1}. ${i.name}*\n${i.variant ? `   Variante: ${i.variant}\n` : ''}   Cantidad: ${i.quantity}\n   Precio: S/ ${(i.price * i.quantity).toFixed(2)}\n`; 
+            });
+
+            msg += '\n--------------------------------\n';
+            // \uD83D\uDCB0 es BOLSA DE DINERO 💰
+            msg += `\uD83D\uDCB0 *SUBTOTAL: S/ ${subtotal.toFixed(2)}*`;
+            
+            if (extraNotes) {
+                msg += extraNotes;
+            }
+
+            // \uD83D\uDC49 es DEDO APUNTANDO 👉
+            msg += `\n\n\uD83D\uDC49 *TOTAL FINAL A PAGAR: S/ ${total.toFixed(2)}*`;
+            
+            if (securityToken) {
+                msg += `\n${securityToken}`;
+            }
+
+            // \uD83D\uDCCD es PIN DE UBICACIÓN 📍
+            msg += `\n\n\uD83D\uDCCD *Por favor, envia tus datos:*\n* Nombre completo\n* Direccion\n* Distrito y ciudad\n* Telefono`;
+
+            // Usamos api.whatsapp.com que es más robusto para caracteres especiales
+            window.open(`https://api.whatsapp.com/send?phone=51988629803&text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Función auxiliar necesaria
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        }
+
+        // Función auxiliar para el número de semana (seguridad)
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
         }
         function buyNow(id) { cart = []; addToCart(id); closeQuickView(); checkout(); }
 
@@ -5092,15 +5174,18 @@ function applyExitDiscount() {
 // ========================================
 // PREMIOS SEGUROS - No afectan tu margen de S/46 (S/16 envío + S/30 ganancia)
 // Los "descuentos" son sobre precio inflado o beneficios que no cuestan
+// ========================================
+// CONFIGURACIÓN DE PREMIOS (MATEMÁTICA)
+// ========================================
 const wheelPrizes = [
-    { text: 'ENVÍO GRATIS', color: '#10b981', code: 'ENVIO', desc: 'En compras +S/99' },      // Ya es gratis en +99
-    { text: 'S/5 OFF', color: '#f97316', code: 'NOVA5', desc: 'En compras +S/120' },          // Solo S/5, mínimo alto
-    { text: 'REGALO', color: '#ec4899', code: 'REGALO', desc: 'Sorpresa en tu pedido' },     // No cuesta nada real
-    { text: '2x1 ENVÍO', color: '#3b82f6', code: '2X1ENVIO', desc: '2 pedidos, 1 envío' },   // Ahorras en logística
-    { text: 'ENVÍO GRATIS', color: '#10b981', code: 'ENVIO', desc: 'En compras +S/99' },
-    { text: 'PRIORIDAD', color: '#8b5cf6', code: 'VIP', desc: 'Envío express gratis' },      // Mismo costo para ti
-    { text: 'S/10 OFF', color: '#ef4444', code: 'NOVA10', desc: 'En compras +S/180' },       // Solo S/10, mínimo MUY alto
-    { text: 'REGALO', color: '#ec4899', code: 'REGALO', desc: 'Sorpresa en tu pedido' }
+    { text: 'ENVÍO GRATIS', color: '#10b981', code: 'ENVIO', type: 'shipping', value: 0, desc: 'En compras +S/99' },
+    { text: 'S/5 OFF', color: '#f97316', code: 'NOVA5', type: 'fixed', value: 5, desc: 'En compras +S/120' },
+    { text: 'REGALO SORPRESA', color: '#ec4899', code: 'REGALO', type: 'gift', value: 0, desc: 'Sorpresa en tu caja' },
+    { text: '2x1 ENVÍO', color: '#3b82f6', code: '2X1ENVIO', type: 'shipping', value: 0, desc: 'Ahorra en logística' },
+    { text: 'ENVÍO GRATIS', color: '#10b981', code: 'ENVIO', type: 'shipping', value: 0, desc: 'En compras +S/99' },
+    { text: 'PRIORIDAD', color: '#8b5cf6', code: 'VIP', type: 'gift', value: 0, desc: 'Envío express gratis' },
+    { text: 'S/10 OFF', color: '#ef4444', code: 'NOVA10', type: 'fixed', value: 10, desc: 'En compras +S/180' },
+    { text: 'REGALO SORPRESA', color: '#ec4899', code: 'REGALO', type: 'gift', value: 0, desc: 'Sorpresa en tu caja' }
 ];
 
 let wheelSpinning = false;
@@ -5192,21 +5277,33 @@ function showWheelResult() {
     const winningIndex = Math.floor(normalizedAngle / sliceAngle) % wheelPrizes.length;
     const prize = wheelPrizes[winningIndex];
     
+    // 1. Mostrar resultado en pantalla
     document.getElementById('wheelPrizeCode').textContent = prize.code;
     document.getElementById('wheelPrizeDesc').textContent = prize.desc || '';
     document.getElementById('wheelResult').classList.add('show');
     document.getElementById('spinBtn').style.display = 'none';
     
-    // Guardar premio ganado
-    localStorage.setItem('novaWheelPrize', JSON.stringify(prize));
+    // 2. GUARDADO SEGURO (ANTI-TRAMPA)
+    const prizeData = {
+        ...prize,
+        wonAt: new Date().getTime(), // Marca de tiempo exacta
+        expiresAt: new Date().getTime() + (7 * 24 * 60 * 60 * 1000) // Validez de 7 días
+    };
+    
+    localStorage.setItem('novaWheelPrize', JSON.stringify(prizeData));
     localStorage.setItem('novaWheelSpun', 'true');
     
     launchConfetti();
+    
+    // Cambiamos el texto del botón para indicar automatización
+    const actionBtn = document.querySelector('#wheelResult .btn');
+    if(actionBtn) actionBtn.innerHTML = '<i class="fas fa-magic"></i> ¡Aplicar Descuento Automático!';
 }
 
 function openWheel() {
+    // Si la variable 'novaWheelSpun' existe, significa que jugó hace menos de una semana
     if (localStorage.getItem('novaWheelSpun')) {
-        showToast('Ya giraste la rueda hoy 🎰');
+        showToast('Vuelve la próxima semana para girar de nuevo 🎰');
         return;
     }
     document.getElementById('wheelOverlay').classList.add('show');
@@ -5221,17 +5318,32 @@ function closeWheel() {
 
 function claimWheelPrize() {
     closeWheel();
-    showToast('¡Premio activado! Menciónalo en WhatsApp 🎁');
-    document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
+    showToast('¡Descuento aplicado automáticamente al carrito! 🛒');
+    // Actualizamos visualmente el total del carrito si está abierto (opcional, pero buena práctica)
+    updateCartUI(); 
 }
 
 // Auto-show wheel after 45 seconds for new visitors
+// ========================================
+// RULETA SEMANAL
+// ========================================
 function initWheel() {
-    if (!localStorage.getItem('novaWheelSpun') && !localStorage.getItem('novaWheelOffered')) {
+    const lastShown = localStorage.getItem('novaWheelDate'); // Obtenemos la fecha guardada
+    const now = new Date().getTime(); // Hora actual en milisegundos
+    const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 días en milisegundos (604,800,000 ms)
+
+    // Lógica: Si nunca se mostró (null) O si la diferencia de tiempo es mayor a una semana
+    if (!lastShown || (now - lastShown > oneWeek)) {
+        
+        // IMPORTANTE: Reseteamos los bloqueos anteriores para permitir que juegue de nuevo
+        localStorage.removeItem('novaWheelSpun'); 
+        localStorage.removeItem('novaWheelOffered');
+
         setTimeout(() => {
-            localStorage.setItem('novaWheelOffered', 'true');
+            // Guardamos la fecha/hora actual como la nueva "última vez"
+            localStorage.setItem('novaWheelDate', now);
             openWheel();
-        }, 45000);
+        }, 45000); // Aparece a los 45 segundos
     }
 }
 
