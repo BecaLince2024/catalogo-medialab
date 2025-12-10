@@ -113,7 +113,42 @@
             --duration-slow: 500ms;
             --duration-slower: 800ms;
         }
+        /* --- AGREGA ESTO EN TU <style> --- */
 
+        /* 1. Hacemos que el Modal (z-index 300) esté por encima del Carrito (que es 201) */
+        .modal-overlay {
+            z-index: 300 !important; 
+        }
+
+        /* 2. Mejoramos el item del Upsell para que se vea clicable */
+        .cart-upsell-item {
+            position: relative; /* Para posicionar elementos */
+            transition: background 0.2s;
+        }
+
+        /* 3. Agrandamos un poco la imagen (de 45px a 55px) y le damos cursor de mano */
+        .cart-upsell-img {
+            width: 55px !important;
+            height: 55px !important;
+            cursor: pointer;
+        }
+
+        /* 4. Icono de "ver más" sobre la imagen (sutil) */
+        .view-details-hint {
+            position: absolute;
+            left: 3px;
+            bottom: 3px;
+            font-size: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none; /* El click pasa a la imagen */
+        }
         /* ========================================
         ESTILOS DESCRIPCIÓN INTELIGENTE (IA LOCAL)
         ======================================== */
@@ -5557,7 +5592,7 @@ function renderRecentlyViewed() {
 // CART UPSELLS
 // ========================================
 function renderCartUpsells() {
-    // Eliminar upsells existentes
+    // Eliminar upsells existentes para refrescar
     const existingUpsells = document.getElementById('cartUpsells');
     if (existingUpsells) existingUpsells.remove();
     
@@ -5574,39 +5609,49 @@ function renderCartUpsells() {
     let upsells = allProducts
         .filter(p => !cartIds.includes(p.indice) && cartCategories.includes(p.categoria))
         .sort(() => Math.random() - 0.5)
-        .slice(0, 2); // Solo 2 productos, no 3
+        .slice(0, 2); // Solo 2 productos
     
-    // Si no hay suficientes de la misma categoría, completar con populares
+    // Si no hay suficientes, completar con populares
     if (upsells.length < 2) {
         const extras = allProducts
             .filter(p => !cartIds.includes(p.indice) && !upsells.find(u => u.indice === p.indice))
-            .sort((a, b) => b.margen - a.margen) // Los más populares
+            .sort((a, b) => b.margen - a.margen)
             .slice(0, 2 - upsells.length);
         upsells = [...upsells, ...extras];
     }
     
     if (upsells.length === 0) return;
     
-    // Insertar DESPUÉS del footer, no entre items
     const cartFooter = document.getElementById('cartFooter');
     if (!cartFooter) return;
     
     const upsellsHTML = `
         <div class="cart-upsells" id="cartUpsells" style="border-top: none; padding-top: 0; margin-top: var(--space-3);">
-            <details style="cursor: pointer;">
-                <summary style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: var(--space-2); list-style: none; display: flex; align-items: center; gap: var(--space-2);">
-                    <i class="fas fa-lightbulb" style="color: var(--accent-gold);"></i> 
-                    Te puede interesar 
+            <details style="cursor: pointer;" open> <summary style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: var(--space-2); list-style: none; display: flex; align-items: center; gap: var(--space-2);">
+                    <i class="fas fa-fire" style="color: var(--accent-rose);"></i> 
+                    🔥 Otros clientes también llevaron
                     <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
                 </summary>
+                
                 ${upsells.map(p => `
                     <div class="cart-upsell-item" style="margin-top: var(--space-2);">
-                        <img class="cart-upsell-img" src="${p.imagenUrl}" alt="" onerror="this.src='https://via.placeholder.com/40'">
-                        <div class="cart-upsell-info">
-                            <div class="cart-upsell-name">${cleanName(p.nombre).substring(0, 22)}...</div>
-                            <div class="cart-upsell-price">S/ ${getSalePrice(p).toFixed(2)}</div>
+                        
+                        <div style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer;" onclick="openQuickView(${p.indice})">
+                            <div style="position:relative;">
+                                <img class="cart-upsell-img" src="${p.imagenUrl}" alt="" onerror="this.src='https://via.placeholder.com/40'">
+                                <div class="view-details-hint"><i class="fas fa-search"></i></div>
+                            </div>
+                            
+                            <div class="cart-upsell-info">
+                                <div class="cart-upsell-name" style="color: var(--accent-gold); font-weight:500;">
+                                    ${cleanName(p.nombre).substring(0, 22)}...
+                                </div>
+                                <div class="cart-upsell-price">S/ ${getSalePrice(p).toFixed(2)}</div>
+                                <div style="font-size:10px; color:var(--text-muted);">Ver detalles ></div>
+                            </div>
                         </div>
-                        <button class="cart-upsell-add" onclick="addToCart(${p.indice})">
+
+                        <button class="cart-upsell-add" onclick="addToCart(${p.indice})" aria-label="Agregar rápido">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
@@ -5615,7 +5660,6 @@ function renderCartUpsells() {
         </div>
     `;
     
-    // Insertar ANTES del footer (después de los items, no entre ellos)
     cartFooter.insertAdjacentHTML('beforebegin', upsellsHTML);
 }
 
