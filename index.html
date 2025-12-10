@@ -3660,12 +3660,61 @@
                 .trim();
 
             // 2. CONTEXTO DE EMOJIS
+            // 2. CONTEXTO DE EMOJIS (Versión Super Extensa)
             const emojis = {
-                'batería': '🔋', 'carga': '⚡', 'pantalla': '📱', 'bluetooth': '📶',
-                'agua': '💧', 'cocina': '🍳', 'limpieza': '✨', 'niños': '👶',
-                'juguete': '🎮', 'audio': '🎧', 'sonido': '🔊', 'luz': '💡',
-                'led': '💡', 'seguridad': '🔒', 'garantía': '🛡️', 'envío': '🚚',
-                'moda': '👗', 'belleza': '💄', 'piel': '🧴', 'regalo': '🎁'
+                // --- TECNOLOGÍA Y GADGETS ---
+                'batería': '🔋', 'carga': '⚡', 'usb': '🔌', 'cable': '🔌',
+                'pantalla': '📱', 'display': '🖥️', 'táctil': '👆',
+                'bluetooth': '📶', 'wifi': '📡', 'inalámbrico': '🛜',
+                'audio': '🎧', 'sonido': '🔊', 'audífonos': '🎧', 'parlante': '🔈', 'micrófono': '🎙️',
+                'cámara': '📷', 'foto': '📸', 'video': '📹', 'lente': '🔍',
+                'celular': '📱', 'smartphone': '📲', 'tablet': '📟', 'laptop': '💻',
+                'gamer': '🎮', 'juego': '🕹️', 'consola': '🎮', 'mouse': '🖱️', 'teclado': '⌨️',
+                'reloj': '⌚', 'smartwatch': '⌚', 'alarma': '⏰',
+                'luz': '💡', 'led': '💡', 'foco': '💡', 'lámpara': '🛋️', 'solar': '☀️',
+
+                // --- HOGAR Y COCINA ---
+                'agua': '💧', 'grifo': '🚰', 'ducha': '🚿', 'baño': '🛁',
+                'cocina': '🍳', 'sartén': '🥘', 'olla': '🍲', 'cuchillo': '🔪',
+                'licuadora': '🌪️', 'batidora': '🥣', 'horno': '🔥', 'microondas': '☢️',
+                'limpieza': '✨', 'escoba': '🧹', 'trapeador': '🫧', 'aspiradora': '🌪️',
+                'cama': '🛏️', 'almohada': '☁️', 'sábana': '🛌', 'colchón': '😴',
+                'organizador': '📦', 'caja': '📦', 'estante': '📚', 'ropero': '🚪',
+                'jardín': '🌻', 'planta': '🪴', 'maceta': '🌿', 'riego': '🚿',
+
+                // --- MODA Y BELLEZA ---
+                'moda': '👗', 'vestido': '👗', 'ropa': '👕', 'polo': '👕', 'camisa': '👔',
+                'pantalón': '👖', 'jean': '👖', 'short': '🩳',
+                'zapatilla': '👟', 'zapato': '👞', 'sandalia': '👡', 'botas': '👢',
+                'belleza': '💄', 'maquillaje': '💋', 'labial': '💄', 'uñas': '💅',
+                'piel': '🧴', 'crema': '🧴', 'facial': '🧖‍♀️', 'mascarilla': '🎭',
+                'cabello': '💇‍♀️', 'peine': '🪮', 'secadora': '💨', 'plancha': '🔥',
+                'joya': '💎', 'collar': '📿', 'anillo': '💍', 'arete': '👂',
+                'bolso': '👜', 'cartera': '👛', 'mochila': '🎒', 'billetera': '💳',
+
+                // --- NIÑOS Y JUGUETES ---
+                'niños': '👶', 'bebé': '🍼', 'infantil': '🧸',
+                'juguete': '🎮', 'peluche': '🧸', 'muñeca': '🎎', 'carro': '🚗',
+                'educativo': '🧠', 'escolar': '🎒', 'arte': '🎨', 'colores': '🌈',
+
+                // --- HERRAMIENTAS Y AUTO ---
+                'auto': '🚗', 'coche': '🚘', 'moto': '🏍️', 'bicicleta': '🚲',
+                'llanta': '🛞', 'motor': '⚙️', 'aire': '💨',
+                'herramienta': '🛠️', 'taladro': '🔫', 'martillo': '🔨', 'destornillador': '🪛',
+                'medida': '📏', 'cinta': '📐', 'pegamento': '🧪',
+                'seguridad': '🔒', 'candado': '🔐', 'cámara': '📹',
+
+                // --- DEPORTES Y AIRE LIBRE ---
+                'deporte': '🏃', 'ejercicio': '💪', 'gimnasio': '🏋️', 'yoga': '🧘',
+                'fútbol': '⚽', 'pelota': '⚽', 'natación': '🏊',
+                'camping': '⛺', 'linterna': '🔦', 'termo': '🌡️', 'botella': '🍼',
+
+                // --- VENTA Y SERVICIO ---
+                'garantía': '🛡️', 'protección': '🛡️', 'calidad': '⭐', 'premium': '💎',
+                'envío': '🚚', 'delivery': '🛵', 'rápido': '🚀', 'gratis': '🆓',
+                'oferta': '🔥', 'descuento': '🏷️', 'ahorro': '💰', 'precio': '💵',
+                'regalo': '🎁', 'nuevo': '✨', 'original': '✅', 'stock': '📦',
+                'perú': '🇵🇪', 'nacional': '🇵🇪', 'pago': '💳'
             };
 
             // 3. REFORMATEO
