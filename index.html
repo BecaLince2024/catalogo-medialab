@@ -115,6 +115,47 @@
         }
 
         /* ========================================
+        ESTILOS DESCRIPCIÓN INTELIGENTE (IA LOCAL)
+        ======================================== */
+        .modal-description-container {
+            margin-bottom: var(--space-6);
+        }
+        .modal-description-text {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            line-height: 1.8;
+            position: relative;
+            white-space: pre-line; /* Importante para respetar saltos de línea */
+        }
+        .modal-description-text.collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+        .btn-read-more {
+            background: none;
+            border: none;
+            color: var(--accent-gold);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            margin-top: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+        .btn-read-more:hover {
+            color: var(--text-primary);
+        }
+
+
+        /* ========================================
            RESET & BASE STYLES
         ======================================== */
         *, *::before, *::after {
@@ -3601,46 +3642,128 @@
         }
         function openMobileSearch() { const q = prompt('¿Qué buscas?'); if (q && searchInput) { searchInput.value = q; searchProducts(); } }
 
+
         // ========================================
-        // QUICK VIEW
+        // MOTOR DE MEJORA DE TEXTO (AI SIMULADA)
         // ========================================
+        function improveTextAI(rawText, category, productName) {
+            if (!rawText) return "¡Descubre la calidad premium de este producto! Ideal para ti.";
+
+            // 1. LIMPIEZA
+            let clean = rawText
+                .replace(/RUC\s*[0-9]+/gi, '')
+                .replace(/razón social/gi, '')
+                .replace(/emitimos boleta/gi, '')
+                .replace(/sku:.*/gi, '')
+                .replace(/[_-]{2,}/g, '') 
+                .replace(/\s+/g, ' ') 
+                .trim();
+
+            // 2. CONTEXTO DE EMOJIS
+            const emojis = {
+                'batería': '🔋', 'carga': '⚡', 'pantalla': '📱', 'bluetooth': '📶',
+                'agua': '💧', 'cocina': '🍳', 'limpieza': '✨', 'niños': '👶',
+                'juguete': '🎮', 'audio': '🎧', 'sonido': '🔊', 'luz': '💡',
+                'led': '💡', 'seguridad': '🔒', 'garantía': '🛡️', 'envío': '🚚',
+                'moda': '👗', 'belleza': '💄', 'piel': '🧴', 'regalo': '🎁'
+            };
+
+            // 3. REFORMATEO
+            let formatted = clean.replace(/[-•*]\s?([A-Z])/g, '\n• $1'); // Usamos \n para saltos reales
+            
+            // Inyectar emojis inteligentes
+            Object.keys(emojis).forEach(key => {
+                const regex = new RegExp(`\\b${key}\\b`, 'gi');
+                if (Math.random() > 0.7) { 
+                    formatted = formatted.replace(regex, `${key} ${emojis[key]}`);
+                }
+            });
+
+            // 4. INTRODUCCIÓN
+            const intros = [
+                `¡Eleva tu experiencia con ${productName}!`,
+                "Diseñado pensando en calidad y eficiencia.",
+                "El complemento perfecto que estabas buscando.",
+                "¡No dejes pasar esta oportunidad exclusiva!"
+            ];
+            
+            if (formatted.length < 50) {
+                const randomIntro = intros[Math.floor(Math.random() * intros.length)];
+                formatted = `${randomIntro}\n\n${formatted}`;
+            }
+
+            return formatted;
+        }
+
+        // Función para alternar ver más / ver menos
+        function toggleDescription() {
+            const text = document.getElementById('modalDescText');
+            const btn = document.getElementById('modalDescBtn');
+            
+            if (text.classList.contains('collapsed')) {
+                text.classList.remove('collapsed');
+                text.style.maskImage = 'none';
+                text.style.webkitMaskImage = 'none';
+                btn.innerHTML = 'Ver menos <i class="fas fa-chevron-up"></i>';
+            } else {
+                text.classList.add('collapsed');
+                text.style.maskImage = '';
+                text.style.webkitMaskImage = '';
+                btn.innerHTML = 'Ver más características <i class="fas fa-chevron-down"></i>';
+            }
+        }
+
         // ========================================
-        // QUICK VIEW (MODIFICADO)
+        // QUICK VIEW (FUSIONADO: IA LOCAL + HISTORIAL FIX)
         // ========================================
-        function openQuickView(id) {
+        function openQuickView(id, addHistory = true) {
             const p = allProducts.find(x => x.indice === id);
             if (!p) return;
 
-            // --- 1. LÓGICA DE URL ---
-            // Creamos un "slug" (nombre amigable para URL)
-            const slug = cleanName(p.nombre)
-                .toLowerCase()
-                .replace(/ /g, '-')
-                .replace(/[^\w-]+/g, '');
-            
-            // Actualizamos la URL del navegador visualmente
-            const newUrl = `${window.location.pathname}?producto=${id}&nombre=${slug}`;
-            // Guardamos el estado para que el botón "Atrás" funcione
-            window.history.pushState({ modalOpen: true, productId: id }, '', newUrl);
+            // --- 1. LÓGICA DE URL E HISTORIAL ---
+            if (addHistory) {
+                const slug = cleanName(p.nombre)
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '');
+                
+                const newUrl = `${window.location.pathname}?producto=${id}&nombre=${slug}`;
+                window.history.pushState({ modalOpen: true, productId: id }, '', newUrl);
+            }
 
-            // --- CÁLCULOS DE PRECIO ---
+            // --- 2. CÁLCULOS DE PRECIO Y RATINGS ---
             const sp = getSalePrice(p);
             const op = (sp * 1.5).toFixed(2);
             const disc = Math.round(((sp * 1.5 - sp) / (sp * 1.5)) * 100);
             const rating = (4 + Math.random()).toFixed(1);
             const reviews = Math.floor(Math.random() * 200) + 50;
+
+            // --- 3. MOTOR DE MEJORA DE TEXTO (TU CÓDIGO) ---
+            const rawDesc = p.descripcion || '';
+            // Llamamos a tu función de IA Local
+            const improvedDesc = improveTextAI(rawDesc, p.categoria, cleanName(p.nombre));
             
-            // Limpieza de descripción
-            let desc = (p.descripcion || 'Producto de excelente calidad.').replace(/🎁[^:]*:|🌟[^:]*:/g, '').replace(/[✅✨🔹💪🔥⭐🌟🎄🎅⚡💫🏠📦📏👉🔴📱🔦🎨]/g, '').split('\n').filter(l => !l.includes('RUC') && !l.includes('razón social')).slice(0, 5).join(' ').substring(0, 280);
+            // Determinamos si necesita botón "Ver más"
+            const isLong = improvedDesc.length > 180;
             
-            // Lógica de variantes
+            // HTML de la descripción
+            const descHTML = `
+                <div class="modal-description-container">
+                    <div id="modalDescText" class="modal-description-text ${isLong ? 'collapsed' : ''}">
+                        ${improvedDesc}
+                    </div>
+                    ${isLong ? `<button id="modalDescBtn" class="btn-read-more" onclick="toggleDescription()">Ver más características <i class="fas fa-chevron-down"></i></button>` : ''}
+                </div>
+            `;
+
+            // --- 4. VARIANTES ---
             let variants = '';
             if (p.variantes?.length > 1) {
                 const v = [...new Set(p.variantes.map(x => x.variante).filter(x => x))];
                 if (v.length) variants = `<div class="modal-variants"><div class="modal-variants-label">Variante:</div><div class="variant-options">${v.map((x, i) => `<div class="variant-option ${i === 0 ? 'active' : ''}" onclick="selectVariant(this)">${x}</div>`).join('')}</div></div>`;
             }
 
-            // --- 2. RENDERIZADO CON BREADCRUMBS (MIGAS DE PAN) ---
+            // --- 5. RENDERIZADO FINAL ---
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-image">
                     <div style="position: absolute; top: 10px; left: 10px; font-size: 10px; color: var(--text-muted); z-index: 5;">
@@ -3653,20 +3776,33 @@
                         <span style="cursor:pointer" onclick="closeQuickView()">Inicio</span> 
                         <i class="fas fa-chevron-right" style="font-size: 8px; margin: 0 5px;"></i>
                         <span style="cursor:pointer" onclick="closeQuickView(); filterByCategory('${p.categoria}')">${p.categoria || 'Catálogo'}</span>
-                        <i class="fas fa-chevron-right" style="font-size: 8px; margin: 0 5px;"></i>
-                        <span style="color: var(--accent-gold); font-weight: 600;">Producto #${id}</span>
                     </nav>
 
                     <h2 class="modal-title">${cleanName(p.nombre)}</h2>
-                    <div class="modal-rating"><div class="modal-stars">${'<i class="fas fa-star"></i>'.repeat(5)}</div><span class="modal-reviews">${rating} (${reviews} reseñas)</span></div>
-                    <div class="modal-price"><span class="modal-price-current">S/ ${sp.toFixed(2)}</span><span class="modal-price-original">S/ ${op}</span><span class="modal-discount">-${disc}% OFF</span></div>
-                    <p class="modal-description">${desc}${desc.length >= 275 ? '...' : ''}</p>
-                    <div class="modal-stock"><i class="fas fa-check-circle"></i><span>En stock — Listo para enviar</span></div>
+                    
+                    <div class="modal-rating">
+                        <div class="modal-stars">${'<i class="fas fa-star"></i>'.repeat(5)}</div>
+                        <span class="modal-reviews">${rating} (${reviews} reseñas)</span>
+                    </div>
+                    
+                    <div class="modal-price">
+                        <span class="modal-price-current">S/ ${sp.toFixed(2)}</span>
+                        <span class="modal-price-original">S/ ${op}</span>
+                        <span class="modal-discount">-${disc}% OFF</span>
+                    </div>
+                    
+                    ${descHTML}
+                    
+                    <div class="modal-stock">
+                        <i class="fas fa-check-circle"></i>
+                        <span>En stock — Envío inmediato</span>
+                    </div>
+                    
                     ${variants}
+                    
                     <div class="modal-actions">
                         <button class="btn btn-primary modal-add-cart" onclick="addToCart(${p.indice}); closeQuickView();"><i class="fas fa-shopping-bag"></i> Agregar al Carrito</button>
                         <button class="modal-buy-now" onclick="buyNow(${p.indice})">Comprar Ahora</button>
-                        ${p.urlInfoAdicional?.trim() ? `<a class="modal-info-link" href="${p.urlInfoAdicional}" target="_blank" rel="noopener"><i class="fas fa-info-circle"></i> Info</a>` : ''}
                     </div>
                 </div>`;
             
