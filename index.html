@@ -3811,7 +3811,8 @@
                 const v = [...new Set(p.variantes.map(x => x.variante).filter(x => x))];
                 if (v.length) variants = `<div class="modal-variants"><div class="modal-variants-label">Variante:</div><div class="variant-options">${v.map((x, i) => `<div class="variant-option ${i === 0 ? 'active' : ''}" onclick="selectVariant(this)">${x}</div>`).join('')}</div></div>`;
             }
-
+            // ¿Tiene URL de info adicional?
+            const hasExtraInfo = p.urlInfoAdicional && p.urlInfoAdicional.trim() !== '';
             // --- 5. RENDERIZADO FINAL ---
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-image">
@@ -3852,6 +3853,15 @@
                     <div class="modal-actions">
                         <button class="btn btn-primary modal-add-cart" onclick="addToCart(${p.indice}); closeQuickView();"><i class="fas fa-shopping-bag"></i> Agregar al Carrito</button>
                         <button class="modal-buy-now" onclick="buyNow(${p.indice})">Comprar Ahora</button>
+                        ${hasExtraInfo ? `
+                            <a class="modal-info-link"
+                            href="${p.urlInfoAdicional}"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                                <i class="fas fa-circle-info"></i>
+                                Ver info adicional
+                            </a>
+                        ` : ''}
                     </div>
                 </div>`;
             
