@@ -1,6 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
+<!-- SEO Básico -->
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.ventaproductosperu.xyz/">
+
+<!-- Open Graph (Facebook/WhatsApp) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.ventaproductosperu.xyz/">
+<meta property="og:title" content="NOVA Mercado | Productos Increíbles con Envío a Todo Perú">
+<meta property="og:description" content="Descubre ofertas exclusivas en tecnología, hogar, belleza y más. Envío rápido, pago seguro, atención por WhatsApp.">
+<meta property="og:image" content="https://www.ventaproductosperu.xyz/og-image.jpg">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Favicon (crea uno gratis en favicon.io) -->
+<link rel="icon" type="image/png" href="/favicon.png">
+
+<!-- Schema.org para Google -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "name": "NOVA Mercado",
+  "url": "https://www.ventaproductosperu.xyz",
+  "logo": "https://www.ventaproductosperu.xyz/logo.png",
+  "description": "Tienda online con envío a todo Perú",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "PE"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+51988629803",
+    "contactType": "customer service"
+  }
+}
+</script>
     <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -28,9 +66,16 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
     
     <style>
+        /* Estilo para el foco del buscador de categorías */
+        .categories-search input:focus {
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2);
+        }
         /* ========================================
            CSS CUSTOM PROPERTIES - LUXURY PALETTE
         ======================================== */
@@ -2043,7 +2088,7 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
 
         @media (min-width: 768px) {
             .footer-grid {
-                grid-template-columns: 2fr repeat(3, 1fr);
+                grid-template-columns: 2fr repeat(4, 1fr);
             }
         }
 
@@ -3884,6 +3929,61 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
             font-size: 14px;
             color: var(--text-muted);
         }
+
+    /* ========================================
+   BÚSQUEDA MÓVIL (UX MEJORADO)
+   ======================================== */
+.mobile-search-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-void);
+    z-index: 9999; /* Por encima de todo */
+    display: none;
+    flex-direction: column;
+}
+
+.mobile-search-overlay.active {
+    display: flex;
+    animation: fadeIn var(--duration-fast);
+}
+
+.mobile-search-container {
+    display: flex;
+    align-items: center;
+    padding: var(--space-4);
+    gap: var(--space-3);
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+}
+
+.mobile-search-container input {
+    flex: 1;
+    padding: 12px 20px;
+    background: var(--bg-deep);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: 16px; /* 16px evita que el iPhone haga zoom automático */
+    outline: none;
+}
+
+.mobile-search-container input:focus {
+    border-color: var(--accent-gold);
+}
+
+.mobile-search-container button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    padding: 5px;
+}
+
+.mobile-search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-4);
+}
     </style>
 </head>
 <body>
@@ -4044,15 +4144,22 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
 
     <!-- CATEGORIES -->
     <section class="categories-section">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="section-eyebrow"><i class="fas fa-th-large"></i> Explora</span>
-                <h2 class="section-title">Nuestras Categorías</h2>
-                <p class="section-description">Encuentra exactamente lo que necesitas</p>
-            </div>
-            <div class="categories-grid" id="categoriesGrid"></div>
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-eyebrow"><i class="fas fa-th-large"></i> Explora</span>
+            <h2 class="section-title">Nuestras Categorías</h2>
+            <p class="section-description">Encuentra exactamente lo que necesitas</p>
         </div>
-    </section>
+
+        <div class="categories-search" style="max-width: 400px; margin: 0 auto 30px auto; position: relative;">
+            <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+            <input type="text" id="categorySearch" placeholder="Buscar categoría (ej. Tecnología)..." 
+                   oninput="filterCategoriesUI(this.value)"
+                   style="width: 100%; padding: 12px 12px 12px 40px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-full); color: var(--text-primary); outline: none;">
+        </div>
+        <div class="categories-grid" id="categoriesGrid"></div>
+    </div>
+</section>
 
     <!-- PRODUCTS -->
     <section class="products-section" id="productos">
@@ -4257,19 +4364,30 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
                     </a>
                     <p>Tu tienda online de confianza en Perú. Productos increíbles, precios justos y la mejor experiencia.</p>
                     <div class="footer-social">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.facebook.com/profile.php?id=61579593537816&locale=es_LA" target="_blank" aria-label="Facebook" title="Síguenos en Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        
+                        <a href="https://www.instagram.com/novamercado.peru/" target="_blank" aria-label="Instagram" title="Síguenos en Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        
+                        <a href="https://www.tiktok.com/@novamercadope?is_from_webapp=1&sender_device=pc" target="_blank" aria-label="TikTok" title="Míranos en TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        
+                        <a href="https://whatsapp.com/channel/0029Vb76ZKXISTkF8ODoaI45" target="_blank" aria-label="Canal WhatsApp" title="Únete a nuestro Canal de Ofertas">
+                            <i class="fas fa-bullhorn"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="footer-column">
                     <h4>Tienda</h4>
                     <ul>
-                        <li><a href="#productos">Todos los Productos</a></li>
-                        <li><a href="#ofertas">Ofertas</a></li>
-                        <li><a href="#">Nuevos Ingresos</a></li>
-                        <li><a href="#">Los Más Vendidos</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterByNav('all')">Todos los Productos</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterByNav('sale')">Ofertas 🔥</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterByNav('new')">Nuevos Ingresos ✨</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterByNav('popular')">Los Más Vendidos ⭐</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -4279,6 +4397,15 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
                         <li><a href="#">Métodos de Pago</a></li>
                         <li><a href="#">Envíos y Entregas</a></li>
                         <li><a href="#">Cambios y Devoluciones</a></li>
+                    </ul>
+                </div>
+                <!-- En el footer, agregar nueva columna -->
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="javascript:void(0)" onclick="showPolicy('shipping')">Política de Envíos</a></li>
+                        <li><a href="javascript:void(0)" onclick="showPolicy('returns')">Cambios y Devoluciones</a></li>
+                        <li><a href="javascript:void(0)" onclick="showPolicy('privacy')">Privacidad</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -4408,7 +4535,9 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
     <div class="confetti-container" id="confettiContainer"></div>
     <!-- FLOATING -->
     <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="Volver arriba"><i class="fas fa-chevron-up"></i></button>
-    <a href="https://wa.me/51988629803?text=Hola!%20Quiero%20información%20sobre%20sus%20productos" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://api.whatsapp.com/send?phone=51988629803&text=Hola%20NOVA%20Mercado!%20👋%20Vi%20su%20página%20web%20y%20tengo%20una%20consulta." class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
 
     <!-- MOBILE NAV -->
     <nav class="mobile-nav" aria-label="Navegación móvil">
@@ -4418,7 +4547,19 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
         <button class="mobile-nav-item" onclick="toggleWishlist()"><i class="far fa-heart"></i><span>Favoritos</span><span class="badge" id="wishlistCountMobile">0</span></button>
         <button class="mobile-nav-item" onclick="toggleCart()"><i class="fas fa-shopping-bag"></i><span>Carrito</span><span class="badge" id="cartCountMobile">0</span></button>
     </nav>
-
+<div class="mobile-search-overlay" id="mobileSearch">
+    <div class="mobile-search-container">
+        <button><i class="fas fa-search"></i></button>
+        <input type="text" id="mobileSearchInput" placeholder="¿Qué buscas hoy?" autocomplete="off">
+        <button onclick="closeMobileSearch()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mobile-search-results" id="mobileSearchResults">
+        <div style="text-align:center; padding-top: 40px; color: var(--text-muted);">
+            <i class="fas fa-keyboard" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
+            <p>Escribe para buscar...</p>
+        </div>
+    </div>
+</div>
     <script>
         // ========================================
         // GLOBAL STATE
@@ -4554,6 +4695,117 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
             setTimeout(initScrollAnimations, 100);
         }
 
+        // ========================================
+        // FILTRO DE CATEGORÍAS
+        // ======================================== 
+        function filterCategoriesUI(query) {
+            const cards = document.querySelectorAll('.category-card');
+            const q = query.toLowerCase().trim();
+            
+            cards.forEach(card => {
+                // Obtenemos el nombre de la categoría dentro de la tarjeta
+                const name = card.querySelector('h3').textContent.toLowerCase();
+                
+                // Si coincide o el buscador está vacío, mostramos. Si no, ocultamos.
+                if (name.includes(q) || q === '') {
+                    card.style.display = '';
+                    card.classList.add('reveal', 'visible'); // Reinicia animación
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        // ... otras funciones ...
+
+        // ========================================
+        // 6. MOSTRAR POLÍTICAS (Corrección)
+        // ========================================
+        function showPolicy(type) {
+            const policies = {
+                shipping: `
+                    <div style="text-align: left;">
+                        <h3 style="color: var(--accent-gold); margin-bottom: 15px; font-family: var(--font-display); font-size: 24px;">🚚 Política de Envíos</h3>
+                        <p style="margin-bottom: 10px;"><strong>Cobertura:</strong> Realizamos envíos a nivel nacional con cobertura total. Contamos con servicio de delivery a domicilio en ciudades principales y despachos seguros a través de Olva Courier y Shalom.</p>
+                        <p style="margin-bottom: 10px;"><strong>Tiempos de Entrega:</strong></p>
+                        <ul style="margin-bottom: 15px; padding-left: 20px; color: var(--text-secondary);">
+                            <li>Lima Metropolitana: 24 a 48 horas.</li>
+                            <li>Provincias: 2 a 5 días hábiles.</li>
+                        </ul>
+                        <p><strong>Costo:</strong> Tarifa plana de S/10. ¡Envío GRATIS en compras mayores a S/99!</p>
+                    </div>
+                `,
+                returns: `
+                    <div style="text-align: left;">
+                        <h3 style="color: var(--accent-gold); margin-bottom: 15px; font-family: var(--font-display); font-size: 24px;">🔄 Cambios y Devoluciones</h3>
+                        <p style="margin-bottom: 10px;">Queremos que ames tu compra. Si no es así, tienes <strong>7 días calendario</strong> desde que recibes el producto para solicitar un cambio.</p>
+                        <p style="margin-bottom: 10px;"><strong>Condiciones:</strong></p>
+                        <ul style="margin-bottom: 15px; padding-left: 20px; color: var(--text-secondary);">
+                            <li>El producto debe estar sin uso y en su empaque original.</li>
+                            <li>Si el producto llegó dañado, el cambio es inmediato y gratuito.</li>
+                        </ul>
+                        <p>Contáctanos por WhatsApp al +51 988 629 803 para gestionar tu caso.</p>
+                    </div>
+                `,
+                privacy: `
+                    <div style="text-align: left;">
+                        <h3 style="color: var(--accent-gold); margin-bottom: 15px; font-family: var(--font-display); font-size: 24px;">🔒 Política de Privacidad</h3>
+                        <p style="margin-bottom: 10px;">En NOVA Mercado, respetamos tu privacidad al 100%.</p>
+                        <ul style="margin-bottom: 15px; padding-left: 20px; color: var(--text-secondary);">
+                            <li>Tus datos (nombre, teléfono, dirección) se utilizan <strong>únicamente</strong> para procesar y entregar tu pedido.</li>
+                            <li>Nunca vendemos ni compartimos tu información con terceros.</li>
+                            <li>Usamos almacenamiento local seguro en tu dispositivo para mejorar tu experiencia de compra.</li>
+                        </ul>
+                    </div>
+                `
+            };
+
+            const content = policies[type];
+            if (content) {
+                document.getElementById('modalContent').innerHTML = `
+                    <div style="padding: 20px; max-width: 600px; margin: 0 auto;">
+                        ${content}
+                        <button class="btn btn-primary" onclick="closeQuickView()" style="margin-top: 25px; width: 100%;">Entendido, gracias</button>
+                    </div>
+                `;
+                document.getElementById('quickViewModal').classList.add('active');
+                document.body.style.overflow = 'hidden'; // Evita que se mueva el fondo
+            }
+        }
+
+        // ... aquí sigue tu document.addEventListener ...
+        // Función para activar filtros desde el menú
+        // ========================================
+        // FUNCIÓN PARA FILTRAR DESDE MENÚ/FOOTER
+        // ========================================
+        function filterByNav(type) {
+            // 1. Desplazamiento suave hacia la sección de productos
+            const section = document.getElementById('productos');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // 2. Activar el filtro correspondiente
+            // Buscamos el botón de filtro que coincide con el tipo (all, sale, new, popular)
+            const btn = document.querySelector(`.filter-btn[data-filter="${type}"]`);
+            
+            if (btn) {
+                // Si existe el botón, le hacemos click automáticamente
+                btn.click();
+            } else {
+                // Si no existe (por si acaso), reseteamos a 'todos'
+                filterByCategory('all');
+            }
+            
+            // 3. Feedback visual (Toast)
+            let message = "Mostrando productos";
+            if (type === 'sale') message = "🔥 Mostrando Ofertas";
+            if (type === 'new') message = "✨ Mostrando Nuevos Ingresos";
+            if (type === 'popular') message = "⭐ Mostrando Los Más Vendidos";
+            
+            if (typeof showToast === 'function') {
+                showToast(message);
+            }
+        }
         function renderProducts(append = false) {
             const start = append ? displayedProducts.length : 0;
             const newProds = filteredProducts.slice(start, start + productsPerPage);
@@ -4565,6 +4817,9 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
                 const sp = getSalePrice(p);
                 const op = (sp * 1.5).toFixed(2);
                 const disc = Math.round(((sp * 1.5 - sp) / (sp * 1.5)) * 100);
+                // --- PEGA ESTO AQUÍ ---
+                const priceContext = sp < 50 ? '💚 Precio bajo' : sp < 100 ? '💛 Precio medio' : '🔥 Producto premium';
+                // ---------------------
                 const inWish = wishlist.includes(p.indice);
                 const rating = (4 + Math.random()).toFixed(1);
                 const reviews = Math.floor(Math.random() * 200) + 50;
@@ -4576,27 +4831,28 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
                 const card = document.createElement('div');
                 card.className = `product-card reveal reveal-delay-${(i % 4) + 1}`;
                 card.innerHTML = `
-                    <div class="product-badges">${badges.join('')}</div>
-                    <button class="product-wishlist ${inWish ? 'active' : ''}" onclick="toggleWishlistItem(${p.indice}, event)" aria-label="Favorito"><i class="${inWish ? 'fas' : 'far'} fa-heart"></i></button>
-                    <div class="product-image">
-                        <img src="${p.imagenUrl}" alt="${cleanName(p.nombre)}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x220/141419/f8f8f2?text=Sin+imagen'">
-                        <button class="product-quick-view" onclick="openQuickView(${p.indice})"><i class="fas fa-eye"></i> Vista Rápida</button>
+                <div class="product-badges">${badges.join('')}</div>
+                <button class="product-wishlist ${inWish ? 'active' : ''}" onclick="toggleWishlistItem(${p.indice}, event)" aria-label="Favorito"><i class="${inWish ? 'fas' : 'far'} fa-heart"></i></button>
+                <div class="product-image">
+                    <img src="${p.imagenUrl}" alt="${cleanName(p.nombre)}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x220/141419/f8f8f2?text=Sin+imagen'">
+                    <button class="product-quick-view" onclick="openQuickView(${p.indice})"><i class="fas fa-eye"></i> Vista Rápida</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${p.categoria || 'General'}</div>
+                    <h3 class="product-title">${cleanName(p.nombre)}</h3>
+                    <div class="product-rating">
+                        <div class="product-stars">${'<i class="fas fa-star"></i>'.repeat(Math.floor(rating))}${rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}</div>
+                        <span class="product-reviews">${rating} (${reviews})</span>
                     </div>
-                    <div class="product-info">
-                        <div class="product-category">${p.categoria || 'General'}</div>
-                        <h3 class="product-title">${cleanName(p.nombre)}</h3>
-                        <div class="product-rating">
-                            <div class="product-stars">${'<i class="fas fa-star"></i>'.repeat(Math.floor(rating))}${rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}</div>
-                            <span class="product-reviews">${rating} (${reviews})</span>
+                    <div class="product-footer">
+                        <div class="product-price">
+                            <span class="price-current">S/ ${sp.toFixed(2)}</span>
+                            <span class="price-original">S/ ${op}</span>
+                            <span class="price-context" style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">${priceContext}</span>
                         </div>
-                        <div class="product-footer">
-                            <div class="product-price">
-                                <span class="price-current">S/ ${sp.toFixed(2)}</span>
-                                <span class="price-original">S/ ${op}</span>
-                            </div>
-                            <button class="btn-add-cart" onclick="addToCart(${p.indice})" aria-label="Agregar"><i class="fas fa-plus"></i></button>
-                        </div>
-                    </div>`;
+                        <button class="btn-add-cart" onclick="addToCart(${p.indice})" aria-label="Agregar"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>`;
                 grid.appendChild(card);
             });
 
@@ -4673,7 +4929,40 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
             filteredProducts = allProducts.filter(p => p.nombre.toLowerCase().includes(q) || (p.categoria && p.categoria.toLowerCase().includes(q)) || (p.descripcion && p.descripcion.toLowerCase().includes(q)));
             currentPage = 1; renderProducts(); document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
         }
-        function openMobileSearch() { const q = prompt('¿Qué buscas?'); if (q && searchInput) { searchInput.value = q; searchProducts(); } }
+        // ========================================
+        // NUEVA BÚSQUEDA MÓVIL
+        // ========================================
+        function openMobileSearch() {
+            const modal = document.getElementById('mobileSearch');
+            const input = document.getElementById('mobileSearchInput');
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Evita scroll en la página de fondo
+            
+            // Enfocar el input automáticamente
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closeMobileSearch() {
+            const modal = document.getElementById('mobileSearch');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Configurar el evento del Input Móvil
+        document.getElementById('mobileSearchInput').addEventListener('keyup', function(e) {
+            // 1. Sincronizar con el buscador principal (para usar tu lógica de filtrado existente)
+            const mainInput = document.getElementById('searchInput');
+            if (mainInput) {
+                mainInput.value = this.value;
+            }
+
+            // 2. Si presiona Enter, ejecutar búsqueda y cerrar
+            if (e.key === 'Enter') {
+                searchProducts(); // Usa tu función existente
+                closeMobileSearch();
+            }
+        });
 
 
         // ========================================
@@ -4884,15 +5173,23 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
                     ${variants}
                     
                     <div class="modal-actions">
-                        <button class="btn btn-primary modal-add-cart" onclick="addToCart(${p.indice}); closeQuickView();"><i class="fas fa-shopping-bag"></i> Agregar al Carrito</button>
+                        <button class="btn btn-primary modal-add-cart" onclick="addToCart(${p.indice}); closeQuickView();">
+                            <i class="fas fa-shopping-bag"></i> Agregar al Carrito
+                        </button>
+                        
                         <button class="modal-buy-now" onclick="buyNow(${p.indice})">Comprar Ahora</button>
+                        
+                        <button onclick="shareProduct(${p.indice})" 
+                                style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-light); background: transparent; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s;"
+                                onmouseover="this.style.color='var(--accent-sky)'; this.style.borderColor='var(--accent-sky)'"
+                                onmouseout="this.style.color='var(--text-secondary)'; this.style.borderColor='var(--border-light)'"
+                                aria-label="Compartir">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+
                         ${hasExtraInfo ? `
-                            <a class="modal-info-link"
-                            href="${p.urlInfoAdicional}"
-                            target="_blank"
-                            rel="noopener noreferrer">
-                                <i class="fas fa-circle-info"></i>
-                                Ver info adicional
+                            <a class="modal-info-link" href="${p.urlInfoAdicional}" target="_blank" rel="noopener noreferrer" style="width: auto; padding: 0 15px;">
+                                <i class="fas fa-circle-info"></i> Info
                             </a>
                         ` : ''}
                     </div>
@@ -5030,6 +5327,29 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
             window.open(`https://api.whatsapp.com/send?phone=51988629803&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
+        // ========================================
+        // COMPARTIR NATIVO
+        // ========================================
+        function shareProduct(id) {
+            const p = allProducts.find(x => x.indice === id);
+            if (!p) return;
+
+            const url = `https://www.ventaproductosperu.xyz/?producto=${id}`;
+            const text = `¡Mira este ${cleanName(p.nombre)}! A solo S/ ${getSalePrice(p).toFixed(2)}`;
+
+            // Si el navegador soporta compartir nativo (Celulares)
+            if (navigator.share) {
+                navigator.share({
+                    title: 'NOVA Mercado',
+                    text: text,
+                    url: url
+                }).catch(console.error);
+            } else {
+                // Fallback para PC: Copiar al portapapeles
+                navigator.clipboard.writeText(`${text} ${url}`);
+                showToast('¡Enlace copiado al portapapeles! 📋');
+            }
+        }
         // Función auxiliar necesaria
         function getWeekNumber(d) {
             d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -5068,7 +5388,46 @@ src="https://www.facebook.com/tr?id=1879461985986454&ev=PageView&noscript=1"
         // ========================================
         function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; t.classList.add('show', 'success'); setTimeout(() => t.classList.remove('show', 'success'), 3000); }
         function updateCounts() { updateCartUI(); updateWishlistCount(); }
-        function subscribeNewsletter(e) { e.preventDefault(); showToast('¡Gracias por suscribirte! 🎉'); e.target.reset(); }
+       function subscribeNewsletter(e) {
+    e.preventDefault();
+    const input = e.target.querySelector('input');
+    const email = input.value;
+    const btn = e.target.querySelector('button');
+    const originalText = btn.innerHTML;
+
+    if (!email) return;
+
+    // 1. Cambio visual inmediato
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+    btn.disabled = true;
+
+    // 2. Tu URL del Script (Asegúrate que sea la que termina en /exec y tenga permisos "Cualquier persona")
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwiPXmXxU8FYqrOoj1tbJRNPcKx-Lr7PA28-4VZcMy7htg_QP-A7WM8al1VreHIn6H4DA/exec';
+
+    const formData = new FormData();
+    formData.append('email', email);
+
+    // 3. ENVÍO BLINDADO (mode: 'no-cors' es la clave)
+    fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
+            // Éxito asumiendo que se envió
+            showToast('¡Gracias! Te has suscrito correctamente 🎉');
+            input.value = ''; 
+            
+            // Backup local
+            const subs = JSON.parse(localStorage.getItem('novaSubscribers') || '[]');
+            subs.push({ email, date: new Date().toISOString() });
+            localStorage.setItem('novaSubscribers', JSON.stringify(subs));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Suscrito localmente (Verifica tu conexión)');
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+}
 
         // ========================================
         // COUNTDOWN
@@ -5937,7 +6296,14 @@ function initNewFeatures() {
     });
 }
 
-        document.addEventListener('DOMContentLoaded', () => {
+       document.addEventListener('DOMContentLoaded', () => {
+    // 1. OBLIGAR A IR ARRIBA AL INICIO
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // Cargar el resto
     loadProducts().then(() => {
         initNewFeatures();
     });
